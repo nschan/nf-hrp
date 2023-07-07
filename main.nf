@@ -28,6 +28,9 @@ workflow HRP {
       // Step 1 Extract proteins
       AGAT_EXTRACT_PROTEINS(hrp_in)
       // Step 2 Interproscan
+      // This step works with spack module interproscan/5.63-95.0-gcc11-csy
+      // It does not seem to give proper results with biocontainers/interproscan:5.59_91.0--hec16e2b_1
+      // This seems to be version related, there is no container for 5.63-95.0 and I cannot build it, attempt to use spack for this
       INTERPROSCAN_PFAM(AGAT_EXTRACT_PROTEINS.out)
       // Step 3.1 Bedfile
       bedtools_gf_in = AGAT_EXTRACT_PROTEINS.out.join(INTERPROSCAN_PFAM.out.nb_bed)

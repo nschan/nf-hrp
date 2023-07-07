@@ -58,7 +58,10 @@ process AGAT_EXTRACT_PROTEINS {
        -g ${genome_gff} \\
        -f ${genome_fasta} \\
        -p \\
-       -o ${prefix}_proteins.fasta
+       -t CDS \\
+       -o proteins.fa
+  
+  sed 's/\\*//g' proteins.fa > ${prefix}_proteins.fasta 
   """
 }
 

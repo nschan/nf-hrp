@@ -7,10 +7,7 @@ process INTERPROSCAN_PFAM {
   tag "$meta"
   label 'process_high'
   
-  conda ""
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'agbase/interproscan:5.45-80_3' }"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -26,7 +23,12 @@ process INTERPROSCAN_PFAM {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  interproscan -f TSV,GFF3 -app Pfam -i ${protein_fasta} -b ${prefix}_proteins
+  interproscan.sh \\
+     -f TSV,GFF3 \\
+     -appl Pfam \\
+     -cpu $task.cpus \\
+     -i ${protein_fasta} \\
+     -b ${prefix}_proteins
   grep NB-ARC ${prefix}_proteins.tsv | cut -f1,7,8 > ${prefix}_NB.bed
   """
 }
@@ -34,11 +36,7 @@ process INTERPROSCAN_PFAM {
 process INTERPROSCAN {
   tag "$meta"
   label 'process_high'
-  
-  conda ""
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'agbase/interproscan:5.45-80_3' }"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -53,19 +51,21 @@ process INTERPROSCAN {
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
+      def infile = task.workDir/${candidate_nb_lrrs}
   """
-  interproscan -f TSV,GFF3 -i ${candidate_nb_lrrs} -b ${prefix}_NBLRR_gene_candidates
+  interproscan.sh \\
+     -f TSV,GFF3 \\
+     -cpu $task.cpus \\
+     -dp \\
+     -i ${candidate_nb_lrrs} \\
+     -b ${prefix}_NBLRR_gene_candidates     
   """
 }
 
 process INTERPROSCAN_SUPERFAMILY {
   tag "$meta"
   label 'process_high'
-  
-  conda ""
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'agbase/interproscan:5.45-80_3' }"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -80,10 +80,12 @@ process INTERPROSCAN_SUPERFAMILY {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  interproscan -f TSV \\
+  interproscan.sh \\
+    -f TSV \\
+    -cpu $task.cpus \\
     -app SUPERFAMILY \\
+    -dp \\
     -i ${protein_fasta} \\
     -b ${prefix}_superfam
-
   """
 }
