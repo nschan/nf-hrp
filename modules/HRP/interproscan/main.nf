@@ -52,7 +52,6 @@ process INTERPROSCAN {
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
-      def infile = task.workDir/${candidate_nb_lrrs}
   """
   interproscan.sh \\
      -f TSV,GFF3 \\

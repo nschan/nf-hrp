@@ -22,9 +22,8 @@ process GENBLAST_G {
       def prefix = task.ext.prefix ?: "${meta}"
       
   """
-  ln -s /opt/genblastg_extension/* .
-
-  genblastG -q ${nb_lrr_fasta} -t ${genome_fasta} -gff -cdna -pro -o ${prefix}_genblastG-output
+  ln -s /opt/genblastG_extension/* .
+  ./genblastG -q ${nb_lrr_fasta} -t ${genome_fasta} -gff -cdna -pro -o ${prefix}_genblastG-output
 
   awk 'BEGIN{FS="[> ]"} /^>/{val=\$2;next}  {print val,length(\$0);val=""} END{if(val!=""){print val}}' ${prefix}_genblastG-output.pro | tr ' ' \\t > ${prefix}_genblastG-output_FbL_length.txt
   """

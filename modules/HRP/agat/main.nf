@@ -20,7 +20,7 @@ process AGAT_FILTER_BY_LENGTH {
       tuple val(meta), path(gff_file)
   
   output:
-      tuple val(meta), path("*.gff"), emit: filtered_gff
+      tuple val(meta), path("*_filtered.gff"), emit: filtered_gff
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
