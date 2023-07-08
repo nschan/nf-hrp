@@ -7,11 +7,6 @@ process BEDTOOLS_GETFASTA {
   tag "$meta"
   label 'process_low'
   
-  conda "bioconda::bedtools=2.31.0"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'staphb/bedtools:2.31.0' }"
-
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -36,11 +31,6 @@ process BEDTOOLS_CLUSTER {
   tag "$meta"
   label 'process_low'
   
-  conda "bioconda::bedtools=2.31.0"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'staphb/bedtools:2.31.0' }"
-
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -62,11 +52,6 @@ process BEDTOOLS_NR_CLUSTERS {
   tag "$meta"
   label 'process_low'
   
-  conda "bioconda::bedtools=2.31.0"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'staphb/bedtools:2.31.0' }"
-
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }

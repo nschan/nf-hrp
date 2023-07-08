@@ -6,12 +6,7 @@ options        = initOptions(params.options)
 process GENBLAST_G {
   tag "$meta"
   label 'process_high'
-  
-  conda "bioconda::genblastg=1.38"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'quay.io/biocontainers/genblastg:1.38--h5b5514e_5' }"
-
+  container "gitlab.lrz.de:5005/beckerlab/container-playground/genblastg:ff448d5c"
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -25,9 +20,12 @@ process GENBLAST_G {
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
+      
   """
+  ln -s /opt/genblastg_extension/* .
+
   genblastG -q ${nb_lrr_fasta} -t ${genome_fasta} -gff -cdna -pro -o ${prefix}_genblastG-output
 
-  awk 'BEGIN{FS="[> ]"} /^>/{val=$2;next}  {print val,length($0);val=""} END{if(val!=""){print val}}' ${prefix}_genblastG-output.pro | tr ' ' \\t > ${prefix}_genblastG-output_FbL_length.txt
+  awk 'BEGIN{FS="[> ]"} /^>/{val=\$2;next}  {print val,length(\$0);val=""} END{if(val!=""){print val}}' ${prefix}_genblastG-output.pro | tr ' ' \\t > ${prefix}_genblastG-output_FbL_length.txt
   """
 }

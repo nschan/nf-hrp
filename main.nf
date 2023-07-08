@@ -18,45 +18,63 @@ include { INTERPROSCAN } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_PFAM } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_SUPERFAMILY } from './modules/HRP/interproscan/main'
 include { IPS2FPG } from './modules/HRP/IPS2fpGs/main'
-include { SEQTK_SUBSET} from './modules/HRP/seqtk/main'
+include { SEQTK_SUBSET_RPS } from './modules/HRP/seqtk/main'
+include { SEQTK_SUBSET_FL } from './modules/HRP/seqtk/main'
+include { GENBLAST_G } from './modules/HRP/genblastG/main'
 
 workflow HRP {
     take: 
-      hrp_in // tuple val(meta), path(genome_fasta), path(genome_gff)
+      hrp_in // tuple val(meta), path(fasta), path(gff)
 
     main:
       // Step 1 Extract proteins
+      /* This procedure produces a few broken proteins on TAIR11.
+         This is somewhat concerning, but.. well.
+         Proteins containing internal stop codons are removed from the fasta file.
+      */ 
+      genome = hrp_in.map(row -> [row.sample, row.fasta])
+
       AGAT_EXTRACT_PROTEINS(hrp_in)
+      proteins = AGAT_EXTRACT_PROTEINS.out
       // Step 2 Interproscan
-      // This step works with spack module interproscan/5.63-95.0-gcc11-csy
+      // This step works with spack module interproscan/5.63-95.0
       // It does not seem to give proper results with biocontainers/interproscan:5.59_91.0--hec16e2b_1
-      // This seems to be version related, there is no container for 5.63-95.0 and I cannot build it, attempt to use spack for this
-      INTERPROSCAN_PFAM(AGAT_EXTRACT_PROTEINS.out)
+      // This seems to be version related..
+      // I guess there are work-arounds for this, but I cannot be bothered.
+      INTERPROSCAN_PFAM(proteins)
       // Step 3.1 Bedfile
-      bedtools_gf_in = AGAT_EXTRACT_PROTEINS.out.join(INTERPROSCAN_PFAM.out.nb_bed)
+      bedtools_gf_in = proteins.join(INTERPROSCAN_PFAM.out.nb_bed)
       // Step 3.2 Extract
       BEDTOOLS_GETFASTA(bedtools_gf_in)
       // Step 3.3 MEME
       MEME(BEDTOOLS_GETFASTA.out)
       // Step 4 MAST
-      MAST(AGAT_EXTRACT_PROTEINS.out.join(MEME.out))
+      MAST(proteins.join(MEME.out))
       // Step 5
-      // UNCLEAR WHERE SUBSET COMES FROM
-      // Subset should be created from
-      //to_subset = INTERPROSCAN_PFAM.out.protein_tsv.join(MAST.OUT)
-      //SEQTK_SUBSET()
-      //INTERPROSCAN_SUPERFAMILY()
+
+      to_subset = proteins
+                    .join(INTERPROSCAN_PFAM.out.protein_tsv
+                    .join(MAST.out.mast_geneids))
+      SEQTK_SUBSET_RPS(to_subset)
+
+      INTERPROSCAN_SUPERFAMILY(SEQTK_SUBSET_RPS.out)
       // Step 6
-      //IPS2FPG(INTERPROSCAN_SUPERFAMILY.out)
+      IPS2FPG(INTERPROSCAN_SUPERFAMILY.out)
       // Step 7
-
+      SEQTK_SUBSET_FL(proteins
+                      .join(IPS2FPG.out.full_length_tsv))
+      GENBLAST_G(genome.join(SEQTK_SUBSET_FL.out))
       // Step 8.1
+      AGAT_FILTER_BY_LENGTH(GENBLAST_G.out.genblast_pro)
       // Step 8.2
+      BEDTOOLS_CLUSTER(AGAT_FILTER_BY_LENGTH.out)
       // Step 8.3
+      //GENBLAST_G.out.length_estimates
       // Step 8.4
+      BEDTOOLS_NR_CLUSTERS(BEDTOOLS_CLUSTER.out.join(GENBLAST_G.out.length_estimates))
       // Step 9
+      INTERPROSCAN(BEDTOOLS_NR_CLUSTERS.out)
 }
-
 workflow {
   ch_input = Channel.fromPath(params.samplesheet) 
                       .splitCsv(header:true) 

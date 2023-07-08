@@ -7,10 +7,9 @@ process IPS2FPG {
   tag "$meta"
   label 'process_low'
   
-  conda "conda-forge::python=3.9.5"
   container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://depot.galaxyproject.org/singularity/python:3.9--1' :
-        'quay.io/biocontainers/python:3.9--1' }"
+        'https://depot.galaxyproject.org/singularity/debian:bullseye' :
+        'debian:bullseye' }"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -20,11 +19,15 @@ process IPS2FPG {
       tuple val(meta), path(proteins_fasta)
   
   output:
-      tuple val(meta), path("*.tsv"), emit: out_tsv
+      tuple val(meta), path("*out.tsv"), emit: out_tsv
+      tuple val(meta), path("*full_length.tsv"), emit: full_length_tsv
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
+      def conf1 = file("$projectDir/assets/conf1.tsv", checkIfExists: true)
+      def conf2 = file("$projectDir/assets/conf2.tsv", checkIfExists: true)
   """
-  IPS2FPGs ${proteins_fasta} -o ${meta}_ips2fp_out.tsv
+  IPS2fpGs.sh -o ${meta}_ips2fp_out.tsv -c ${conf1} -d ${conf2} ${proteins_fasta}
+  cat ${meta}_ips2fp_out.tsv | grep full- > ${meta}_ips2fp_out_full_length.tsv
   """
 }

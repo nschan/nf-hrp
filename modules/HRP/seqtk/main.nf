@@ -3,14 +3,9 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process SEQTK_SUBSET {
+process SEQTK_SUBSET_RPS {
   tag "$meta"
   label 'process_low'
-  
-  conda "bioconda::seqtk=1.6.4"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          'https://depot.galaxyproject.org/singularity/seqtk:1.4--he4a0461_1' :
-          'quay.io/biocontainers/seqtk:1.4--he4a0461_1' }"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -20,13 +15,37 @@ process SEQTK_SUBSET {
       tuple val(meta), path(fasta), path(ids1), path(ids2)
   
   output:
-      tuple val(meta), path("*.fasta"), emit: fasta_subset
+      tuple val(meta), path("*_subset.fasta"), emit: fasta_subset
 
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-    cat ${ids1} ${ids2} > all_ids.txt
+    cat ${ids1} | cut -f 1 > ${ids1}_gene_ids.txt 
+    cat ${ids1}_gene_ids.txt ${ids2} > all_ids.txt
     seqtk subseq ${fasta} all_ids.txt > ${meta}_subset.fasta
+  """
+}
+
+process SEQTK_SUBSET_FL {
+  tag "$meta"
+  label 'process_low'
+  
+  publishDir "${params.out}",
+    mode: params.publish_dir_mode,
+    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
+
+  input:
+      tuple val(meta), path(fasta), path(fl_tab)
+  
+  output:
+      tuple val(meta), path("*full_length.fasta"), emit: fasta_subset
+
+  
+  script:
+      def prefix = task.ext.prefix ?: "${meta}"
+  """
+    cat ${fl_tab} | cut -f 1 > ${fl_tab}_gene_ids.txt 
+    seqtk subseq ${fasta} ${fl_tab}_gene_ids.txt  > ${meta}_full_length.fasta
   """
 }

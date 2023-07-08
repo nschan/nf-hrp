@@ -7,11 +7,6 @@ process MEME {
   tag "$meta"
   label 'process_high'
   
-  conda "bioconda::memesuite=5.5.3"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'memesuite/memesuite:5.5.3' }"
-
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -33,7 +28,10 @@ process MEME {
      -minw 4 \\
      -maxw 7 \\
      -objfun classic \\
-     -markov_order 0
+     -markov_order 0 \\
+     -p $task.cpus
+  
+  cp ${prefix}/meme.txt ${prefix}_meme_out.txt 
   """
 }
 
@@ -41,11 +39,6 @@ process MAST {
   tag "$meta"
   label 'process_high'
   
-  conda "bioconda::memesuite=5.5.3"
-  container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          '' :
-          'memesuite/memesuite:5.5.3' }"
-
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -54,11 +47,14 @@ process MAST {
       tuple val(meta), path(protein_fasta), path(meme_out)
   
   output:
-      tuple val(meta), path("*.txt"), emit: mast_out
+      tuple val(meta), path("*mast_out.txt"), emit: mast_out
+      tuple val(meta), path("*mast_geneIDs.txt"), emit: mast_geneids
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
   mast -o ${meta}_mast ${meme_out} ${protein_fasta}
+  cp ${meta}_mast/mast.txt ${meta}_mast_out.txt
+  cat ${meta}_mast_out.txt | grep -oE "AT[1-5C]G[0-9]+.[0-9]+" > ${meta}_mast_geneIDs.txt
   """
 }

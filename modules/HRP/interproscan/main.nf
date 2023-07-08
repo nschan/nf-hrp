@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 process INTERPROSCAN_PFAM {
   tag "$meta"
   label 'process_high'
-  
+
   spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
@@ -36,6 +36,7 @@ process INTERPROSCAN_PFAM {
 process INTERPROSCAN {
   tag "$meta"
   label 'process_high'
+
   spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
@@ -56,7 +57,6 @@ process INTERPROSCAN {
   interproscan.sh \\
      -f TSV,GFF3 \\
      -cpu $task.cpus \\
-     -dp \\
      -i ${candidate_nb_lrrs} \\
      -b ${prefix}_NBLRR_gene_candidates     
   """
@@ -65,6 +65,7 @@ process INTERPROSCAN {
 process INTERPROSCAN_SUPERFAMILY {
   tag "$meta"
   label 'process_high'
+
   spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
@@ -84,7 +85,6 @@ process INTERPROSCAN_SUPERFAMILY {
     -f TSV \\
     -cpu $task.cpus \\
     -app SUPERFAMILY \\
-    -dp \\
     -i ${protein_fasta} \\
     -b ${prefix}_superfam
   """
