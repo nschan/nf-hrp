@@ -6,7 +6,7 @@ options        = initOptions(params.options)
 process GENBLAST_G {
   tag "$meta"
   label 'process_high'
-  container "gitlab.lrz.de:5005/beckerlab/container-playground/genblastg:ff448d5c"
+  container "gitlab.lrz.de:5005/beckerlab/container-playground/genblastg:2a25a73b"
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
@@ -22,9 +22,11 @@ process GENBLAST_G {
       def prefix = task.ext.prefix ?: "${meta}"
       
   """
+  export PATH="/opt/bin/ncbi-blast/:$PATH"
   ln -s /opt/genblastG_extension/* .
+  makeblastdb -dbtype prot -in ${nb_lrr_fasta} -out ${nb_lrr_fasta}
   ./genblastG -q ${nb_lrr_fasta} -t ${genome_fasta} -gff -cdna -pro -o ${prefix}_genblastG-output
 
-  awk 'BEGIN{FS="[> ]"} /^>/{val=\$2;next}  {print val,length(\$0);val=""} END{if(val!=""){print val}}' ${prefix}_genblastG-output.pro | tr ' ' \\t > ${prefix}_genblastG-output_FbL_length.txt
+  awk 'BEGIN{FS="[> ]"} /^>/{val=\$2;next}  {print val,length(\$0);val=""} END{if(val!=""){print val}}' ${prefix}_genblastG-output*.pro | tr ' ' \\t > ${prefix}_genblastG-output_FbL_length.txt
   """
 }
