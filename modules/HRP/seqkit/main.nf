@@ -3,39 +3,29 @@ include { initOptions; saveFiles; getSoftwareName } from './functions'
 params.options = [:]
 options        = initOptions(params.options)
 
-process AGAT_FILTER_BY_LENGTH {
+process SEQKIT_GET_LENGTH {
   tag "$meta"
   label 'process_low'
 
-  conda "bioconda::agat=1.1.0"
+  conda "bioconda::seqkit=2.4.0"
   container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-          'https://depot.galaxyproject.org/singularity/agat:1.1.0--pl5321hdfd78af_1' :
-          'quay.io/biocontainers/agat:1.1.0--pl5321hdfd78af_1' }"
+          'https://depot.galaxyproject.org/singularity/seqkit:2.4.0--h9ee0642_0' :
+          'quay.io/biocontainers/seqkit:2.4.0--h9ee0642_0' }"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
 
   input:
-      tuple val(meta), path(gff_file)
+      tuple val(meta), path(fasta_file)
   
   output:
-      tuple val(meta), path("*_filtered_transcripts.gff"), emit: filtered_gff
-      tuple val(meta), path("*_filtered_transcripts.bed"), emit: filtered_bed
+      tuple val(meta), path("*_length.txt"), emit: length_estimates
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  agat_sp_filter_gene_by_length.pl \\
-  --gff ${gff_file} \\
-  --size 20000 --test "<" \\
-  -o ${meta}_genblastG-output_filtered.gff
-
-  grep transcript ${meta}_genblastG-output_filtered.gff > ${meta}_genblastG-output_filtered_transcripts.gff
-
-  agat_convert_sp_gff2bed.pl \\
-  --gff ${meta}_genblastG-output_filtered.gff \\
-  -o ${meta}_genblastG-output_filtered_transcripts.bed
+  seqkit fx2tab --length --name ${fasta_file} > ${meta}_length.txt
   """
 }
 

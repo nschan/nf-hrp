@@ -20,7 +20,10 @@ include { INTERPROSCAN_SUPERFAMILY } from './modules/HRP/interproscan/main'
 include { IPS2FPG } from './modules/HRP/IPS2fpGs/main'
 include { SEQTK_SUBSET_RPS } from './modules/HRP/seqtk/main'
 include { SEQTK_SUBSET_FL } from './modules/HRP/seqtk/main'
+include { SEQTK_SUBSET_CANDIDATES } from './modules/HRP/seqtk/main'
 include { GENBLAST_G } from './modules/HRP/genblastG/main'
+include { SEQKIT_GET_LENGTH } from './modules/HRP/seqkit/main'
+
 
 workflow HRP {
     take: 
@@ -63,17 +66,23 @@ workflow HRP {
       // Step 7
       SEQTK_SUBSET_FL(proteins
                       .join(IPS2FPG.out.full_length_tsv))
-      GENBLAST_G(genome.join(SEQTK_SUBSET_FL.out))
+      // Genblast
+      genblast_in = genome.join(SEQTK_SUBSET_FL.out)
+      GENBLAST_G(genblast_in)
+      SEQKIT_GET_LENGTH(GENBLAST_G.out.genblast_pro)
       // Step 8.1
-      AGAT_FILTER_BY_LENGTH(GENBLAST_G.out.genblast_pro)
+      AGAT_FILTER_BY_LENGTH(GENBLAST_G.out.genblast_gff)
       // Step 8.2
-      BEDTOOLS_CLUSTER(AGAT_FILTER_BY_LENGTH.out)
+      BEDTOOLS_CLUSTER(AGAT_FILTER_BY_LENGTH.out.filtered_bed)
       // Step 8.3
-      //GENBLAST_G.out.length_estimates
       // Step 8.4
-      BEDTOOLS_NR_CLUSTERS(BEDTOOLS_CLUSTER.out.join(GENBLAST_G.out.length_estimates))
+      BEDTOOLS_NR_CLUSTERS(BEDTOOLS_CLUSTER.out.join(SEQKIT_GET_LENGTH.out))
       // Step 9
-      INTERPROSCAN(BEDTOOLS_NR_CLUSTERS.out)
+      candidate_lists = proteins
+                        .join(BEDTOOLS_NR_CLUSTERS.out)
+                        .join(IPS2FPG.out.full_length_tsv)
+      SEQTK_SUBSET_CANDIDATES(candidate_lists)
+      INTERPROSCAN(SEQTK_SUBSET_CANDIDATES.out)
 }
 workflow {
   ch_input = Channel.fromPath(params.samplesheet) 

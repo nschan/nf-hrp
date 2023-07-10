@@ -48,7 +48,7 @@ process INTERPROSCAN {
   
   output:
       tuple val(meta), path("*.tsv"), emit: protein_tsv
-      tuple val(meta), path("*.gff"), emit: protein_gff
+      tuple val(meta), path("*.gff3"), emit: protein_gff
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"

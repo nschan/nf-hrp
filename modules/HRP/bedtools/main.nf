@@ -36,7 +36,7 @@ process BEDTOOLS_CLUSTER {
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
 
   input:
-      tuple val(meta), path(gff_file)
+      tuple val(meta), path(bed_file)
   
   output:
       tuple val(meta), path("*_clusters"), emit: clusters
@@ -44,7 +44,7 @@ process BEDTOOLS_CLUSTER {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  grep transcript ${gff_file} | gff2bed | sortBed | clusterBed -s | cut -f4,11  > ${gff_file}_clusters
+  cat ${bed_file} | sortBed | clusterBed -s | cut -f4,11  > ${bed_file}_clusters
   """
 }
 
@@ -65,8 +65,6 @@ process BEDTOOLS_NR_CLUSTERS {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-
   join -t '\t' -1 1 -2 1 -o 1.1,1.2,2.2 <( sort -bk1 ${clusters}) <(sort -bk1 ${length_estimates}) | sort -bk2,2 -bk3,3 -nr | sort -uk2,2 | cut -f1 > ${prefix}-R-gene_ID_list.txt
-  
   """
 }
