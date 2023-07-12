@@ -64,6 +64,7 @@ process AGAT_EXTRACT_PROTEINS {
        -f ${genome_fasta.baseName}.fold.fasta \\
        -p \\
        --cfs \\
+       --cis \\
        -o proteins.fa
   
   grep -B1 "*" proteins.fa | grep -vFf - proteins.fa | fold > ${prefix}_proteins.fasta  
