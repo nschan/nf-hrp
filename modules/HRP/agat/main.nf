@@ -57,14 +57,15 @@ process AGAT_EXTRACT_PROTEINS {
       def prefix = task.ext.prefix ?: "${meta}"
   """
   cat ${genome_gff} | grep CDS | grep -v ChrM > ${genome_gff}_subset.gff3
+  cat ${genome_fasta} | fold > ${genome_fasta.baseName}.fold.fasta
   agat_sp_extract_sequences.pl \\
        -g ${genome_gff}_subset.gff3 \\
-       -f ${genome_fasta} \\
+       -f ${genome_fasta.baseName}.fold.fasta \\
        -p \\
+       -cfs \\
        -o proteins.fa
   
-  perl -pe 'if (/^>/) { \$. > 1 and print "\n" } else { chomp }' < proteins.fa  | sed 's/.\$//' > proteins_nostop.fa 
-  grep -B1 "*" proteins_nostop.fa | grep -vFf - proteins_nostop.fa | fold > ${prefix}_proteins.fasta  
+  grep -B1 "*" proteins.fa | grep -vFf - proteins.fa | fold > ${prefix}_proteins.fasta  
   """
 }
 
