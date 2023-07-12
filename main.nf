@@ -23,6 +23,7 @@ include { SEQTK_SUBSET_FL } from './modules/HRP/seqtk/main'
 include { SEQTK_SUBSET_CANDIDATES } from './modules/HRP/seqtk/main'
 include { GENBLAST_G } from './modules/HRP/genblastG/main'
 include { SEQKIT_GET_LENGTH } from './modules/HRP/seqkit/main'
+include { GET_R_GENE_GFF } from './modules/HRP/local/main'
 
 
 workflow HRP {
@@ -78,6 +79,7 @@ workflow HRP {
       // Step 8.4
       BEDTOOLS_NR_CLUSTERS(BEDTOOLS_CLUSTER.out.join(SEQKIT_GET_LENGTH.out))
       // Step 9
+      GET_R_GENE_GFF(AGAT_FILTER_BY_LENGTH.out.filtered_gff.join(BEDTOOLS_NR_CLUSTERS.out))
       candidate_lists = proteins
                         .join(BEDTOOLS_NR_CLUSTERS.out)
                         .join(IPS2FPG.out.full_length_tsv)
