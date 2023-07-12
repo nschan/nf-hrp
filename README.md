@@ -1,6 +1,6 @@
 # nf-hrp
 
-In this workflow I try to implement the homology based R gene prediction workflow (https://github.com/AndolfoG/HRP)
+This pipeline implements the homology based R gene prediction workflow (https://github.com/AndolfoG/HRP) in nextflow.
 
 ## Usage
 
@@ -11,7 +11,8 @@ This pipeline requires nextflow >= 23.04.2 to work with spack modules, the profi
 nextflow run ~/nf-hrp/ --samplesheet sheet.csv --out './results' -profile biohpc_gen
 ```
 
-samplesheet layout:
+samplesheet layout, header is important:
 ```
 sample,fasta,gff
 sample1,genome1.fasta,genome1,gff
+```

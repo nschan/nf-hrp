@@ -37,7 +37,7 @@ workflow HRP {
       */ 
       genome = hrp_in.map(row -> [row.sample, row.fasta])
 
-      AGAT_EXTRACT_PROTEINS(hrp_in)
+      AGAT_EXTRACT_PROTEINS(hrp_in, "ATMG")
       proteins = AGAT_EXTRACT_PROTEINS.out
       // Step 2 Interproscan
       // This step works with spack module interproscan/5.63-95.0

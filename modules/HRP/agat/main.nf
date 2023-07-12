@@ -49,6 +49,7 @@ process AGAT_EXTRACT_PROTEINS {
 
   input:
       tuple val(meta), path(genome_fasta), path(genome_gff)
+      val(exclusion_pattern)
   
   output:
       tuple val(meta), path("*_proteins.fasta"), emit: extracted_proteins
@@ -56,7 +57,7 @@ process AGAT_EXTRACT_PROTEINS {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  cat ${genome_gff} | grep CDS | grep -v ChrM > ${genome_gff}_subset.gff3
+  cat ${genome_gff} | grep CDS | grep -v ${exclusion_pattern} > ${genome_gff}_subset.gff3
   cat ${genome_fasta} | fold > ${genome_fasta.baseName}.fold.fasta
   agat_sp_extract_sequences.pl \\
        -g ${genome_gff}_subset.gff3 \\
