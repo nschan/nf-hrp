@@ -51,7 +51,7 @@ process AGAT_EXTRACT_PROTEINS {
       tuple val(meta), path(genome_fasta), path(genome_gff)
   
   output:
-      tuple val(meta), path("*.fasta"), emit: extracted_proteins
+      tuple val(meta), path("*_proteins.fasta"), emit: extracted_proteins
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
@@ -62,7 +62,7 @@ process AGAT_EXTRACT_PROTEINS {
        -g ${genome_gff}_subset.gff3 \\
        -f ${genome_fasta.baseName}.fold.fasta \\
        -p \\
-       -cfs \\
+       --cfs \\
        -o proteins.fa
   
   grep -B1 "*" proteins.fa | grep -vFf - proteins.fa | fold > ${prefix}_proteins.fasta  
