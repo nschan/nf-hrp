@@ -25,7 +25,7 @@ RUN md5sum -c interproscan-$IPRSCAN-64-bit.tar.gz.md5
 RUN mkdir -p /opt/interproscan
 
 RUN  tar -pxzf interproscan-$IPRSCAN-64-bit.tar.gz \
-    -C /opt/interproscan
+    -C /opt/interproscan --strip-components=1
 
 RUN rm -f interproscan-$IPRSCAN-64-bit.tar.gz interproscan-$IPRSCAN-64-bit.tar.gz.md5
 

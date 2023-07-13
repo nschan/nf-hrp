@@ -4,10 +4,12 @@ This pipeline implements the '*H*omology based *R* gene *P*rediction' workflow (
 
 # Usage
 
-The pipeline takes a gff3 file with annotations and a fasta file as input in a samplesheet and works through the steps of HRP.
+The pipeline takes a gff3 file with annotations and a fasta file of the genome as input in a samplesheet and works through the steps of HRP.
 The pipeline requires nextflow >= 23.04.2 to work with spack modules, tested on biohpc_gen.
 
 Running this on other infrastructure probably needs some changes to modules.
+
+Clone this repository into ~ (or somewhere else and adapt below) and do
 
 ```
 nextflow run ~/nf-hrp/ --samplesheet sheet.csv --out './results' -profile biohpc_gen
@@ -27,6 +29,10 @@ The relevant gff files are `results/agat/*filtered_trascripts.[gff|bed]`, the ou
 # Notes
 
 I ran into some issues during implementation, I am documenting these here.
+
+## Intitial translation
+
+In 
 
 ## IPS2fpGs.sh
 

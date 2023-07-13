@@ -3,9 +3,11 @@ Here I attempt to replicate the HRP workflow
 https://github.com/AndolfoG/HRP/
 All modules are in modules/HRP
 */
+
 nextflow.enable.dsl = 2 
 params.out = './results'
 params.publish_dir_mode = 'copy'
+params.exclude_pattern = "ATMG"
 
 include { AGAT_FILTER_BY_LENGTH } from './modules/HRP/agat/main'
 include { AGAT_EXTRACT_PROTEINS } from './modules/HRP/agat/main'
@@ -25,6 +27,13 @@ include { GENBLAST_G } from './modules/HRP/genblastG/main'
 include { SEQKIT_GET_LENGTH } from './modules/HRP/seqkit/main'
 include { GET_R_GENE_GFF } from './modules/HRP/local/main'
 
+log.info """\
+  Parameters:
+     samplesheet     : ${params.samplesheet}
+     exlude_pattern  : ${params.exclude_pattern}
+     outdir          : ${params.out}
+"""
+    .stripIndent(false)
 
 workflow HRP {
     take: 
@@ -38,7 +47,7 @@ workflow HRP {
       */ 
       genome = hrp_in.map(row -> [row.sample, row.fasta])
 
-      AGAT_EXTRACT_PROTEINS(hrp_in, "ATMG")
+      AGAT_EXTRACT_PROTEINS(hrp_in, params.exclude_pattern)
       proteins = AGAT_EXTRACT_PROTEINS.out
       // Step 2 Interproscan
       // This step works with spack module interproscan/5.63-95.0
@@ -95,6 +104,7 @@ workflow HRP {
       //   Interproscan of Candidates
       INTERPROSCAN(SEQTK_SUBSET_CANDIDATES.out)
 }
+
 workflow {
   ch_input = Channel.fromPath(params.samplesheet) 
                       .splitCsv(header:true) 
