@@ -17,8 +17,12 @@ samplesheet layout, header is important:
 
 ```
 sample,fasta,gff
-sample1,genome1.fasta,genome1,gff
+sample1,genome1.fasta,genome1.gff
 ```
+
+# Output
+
+The relevant gff files are `results/agat/*filtered_trascripts.[gff|bed]`, the output of the protein annotations from interproscan are in `results/interproscan/*NBLRR_gene_candidates.[gff3|tsv]`
 
 # Notes
 

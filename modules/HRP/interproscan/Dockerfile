@@ -30,7 +30,3 @@ RUN  tar -pxzf interproscan-$IPRSCAN-64-bit.tar.gz \
 RUN rm -f interproscan-$IPRSCAN-64-bit.tar.gz interproscan-$IPRSCAN-64-bit.tar.gz.md5
 
 WORKDIR /opt/interproscan
-
-RUN python3 setup.py -f interproscan.properties
-
-ENTRYPOINT ["/bin/bash", "interproscan/threaded_interproscan.sh"]
