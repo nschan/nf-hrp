@@ -35,8 +35,9 @@ Step 8.4 (sequence lengths) is done using seqkit.
 
 ## Interproscan
 
-I was unable to run interproscan using -dp, successfully, which means that the most recent version needs to be used.
-Some of the interproscan pfam jobs with -dp errored out, and this produced a very short pfam table. I resorted to using spack, but I assume a container with the most recent version would suffice.
+I was unable to run `interproscan` version 5.59_91.0 (the latest version on biocontainers) with `-dp` successfully: some of the interproscan pfam jobs with `-dp` errored out, and this produced a very short pfam table. 
+I resorted to using spack, but I assume a container with the most recent version would suffice, currently that is 5.63-95.
+A dockerfile to build such a container is included in modules/HRP/interproscan.
 
 ## genblastG
 

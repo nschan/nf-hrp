@@ -1,8 +1,8 @@
 from continuumio/miniconda3:latest
 
-RUN git clone https://github.com/thecgs/genblastG_extension.git
-
 RUN apt-get --allow-releaseinfo-change update && apt-get install -y libgomp1
+
+RUN git clone https://github.com/thecgs/genblastG_extension.git
 
 RUN mv genblastG_extension /opt/
 

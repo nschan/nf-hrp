@@ -5,7 +5,7 @@ options        = initOptions(params.options)
 
 process MEME {
   tag "$meta"
-  label 'process_high'
+  label 'process_medium'
   
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -37,7 +37,7 @@ process MEME {
 
 process MAST {
   tag "$meta"
-  label 'process_high'
+  label 'process_medium'
   
   publishDir "${params.out}",
     mode: params.publish_dir_mode,

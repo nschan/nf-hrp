@@ -5,7 +5,7 @@ options        = initOptions(params.options)
 
 process GENBLAST_G {
   tag "$meta"
-  label 'process_high'
+  label 'process_medium'
   container "gitlab.lrz.de:5005/beckerlab/container-playground/genblastg:2a25a73b"
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
