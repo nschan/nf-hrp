@@ -1,7 +1,5 @@
 from continuumio/miniconda3:latest
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 RUN git clone https://github.com/thecgs/genblastG_extension.git
 
 RUN apt-get --allow-releaseinfo-change update && apt-get install -y libgomp1
@@ -17,7 +15,5 @@ RUN mkdir /opt/bin/
 RUN mkdir /opt/bin/ncbi-blast/
 
 RUN mv ncbi-blast-2.14.0+/bin/* /opt/bin/ncbi-blast/
-
-RUN rm -rf /var/tmp
 
 RUN export PATH="/opt/genblastG_extensions/:/opt/bin/ncbi-blast/:$PATH"

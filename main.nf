@@ -42,9 +42,15 @@ workflow HRP {
       proteins = AGAT_EXTRACT_PROTEINS.out
       // Step 2 Interproscan
       // This step works with spack module interproscan/5.63-95.0
+      // I could not locate a container with this version.
+      // Internal container build pipeline failed, the container exceeds storage on the rather small runner VMs.
+      //
       // It does not seem to give proper results with biocontainers/interproscan:5.59_91.0--hec16e2b_1
-      // This seems to be version related..
-      // I guess there are work-arounds for this, but I cannot be bothered.
+      // This seems to be version related.
+      // For me interproscan:5.59_91.0 with -dp did not run, subjobs failed and the result was incomplete.
+      // To use interproscan without -dp the version needs to be the current release.
+      // As of July 2023 this is 5.63-95-0
+      // I guess there are work-arounds for this, it should work with an updated container.
       INTERPROSCAN_PFAM(proteins)
       // Step 3.1 Bedfile
       bedtools_gf_in = proteins.join(INTERPROSCAN_PFAM.out.nb_bed)
@@ -79,11 +85,14 @@ workflow HRP {
       // Step 8.4
       BEDTOOLS_NR_CLUSTERS(BEDTOOLS_CLUSTER.out.join(SEQKIT_GET_LENGTH.out))
       // Step 9
+      //   Extract annotations of non-redundant genes
       GET_R_GENE_GFF(AGAT_FILTER_BY_LENGTH.out.filtered_gff.join(BEDTOOLS_NR_CLUSTERS.out))
+      //   Subset to non-redundant candidates
       candidate_lists = proteins
                         .join(BEDTOOLS_NR_CLUSTERS.out)
                         .join(IPS2FPG.out.full_length_tsv)
       SEQTK_SUBSET_CANDIDATES(candidate_lists)
+      //   Interproscan of Candidates
       INTERPROSCAN(SEQTK_SUBSET_CANDIDATES.out)
 }
 workflow {
