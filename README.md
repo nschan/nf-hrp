@@ -24,7 +24,7 @@ sample1,genome1.fasta,genome1.gff
 
 # Output
 
-The relevant gff files are `results/agat/*filtered_trascripts.[gff|bed]`, the output of the protein annotations from interproscan are in `results/interproscan/*NBLRR_gene_candidates.[gff3|tsv]`
+The relevant gff files are `results/agat/sampleName_filtered_trascripts.[gff|bed]`, the output of the protein annotations from interproscan are in `results/interproscan/sampleName_NBLRR_gene_candidates.[gff3|tsv]`
 
 # Notes
 
@@ -32,7 +32,13 @@ I ran into some issues during implementation, I am documenting these here.
 
 ## Intitial translation
 
-In 
+I used this pipeline on automatic annotations, naturally some are broken. 
+
+There is an option to remove a pattern from the initial gff file, e.g. I am removing "ATMG" to get rid of mitochondrial genes.
+
+In addition, internal stop codons are stripped from protein translations, otherwise interproscan will fail. This means that there are probably some bad translations in the protein file.
+
+I do not consider this a problem for the pipeline here, but I would not recommend using the protein.fasta generated here for other workflows.
 
 ## IPS2fpGs.sh
 
