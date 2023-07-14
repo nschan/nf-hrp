@@ -8,6 +8,7 @@ process INTERPROSCAN_PFAM {
   label 'process_high'
 
   spack 'interproscan@5.63-95.0'
+  container "interpro/interproscan:5.63-95.0"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -38,6 +39,7 @@ process INTERPROSCAN {
   label 'process_high'
 
   spack 'interproscan@5.63-95.0'
+  container "interpro/interproscan:5.63-95.0"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -66,6 +68,7 @@ process INTERPROSCAN_SUPERFAMILY {
   label 'process_high'
 
   spack 'interproscan@5.63-95.0'
+  container "interpro/interproscan:5.63-95.0"
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
