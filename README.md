@@ -58,6 +58,9 @@ I resorted to using spack, but I assume a container with the most recent version
 
 After I wrote this, a new container for interproscan:5.63-95.0 was released by interpro, I have added it to the charliecloud configuration.
 
+-- Update:
+It seems like this container also has some problems and does not run the PFAM analysis. I have not figured out a solution so far, I have rolled back to using spack...
+
 ## genblastG
 
 genblastG is not maintained anymore, the official website does not seem to exist anymore.
