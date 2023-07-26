@@ -7,7 +7,7 @@ process INTERPROSCAN_PFAM {
   tag "$meta"
   label 'process_high'
 
-  container "interpro/interproscan:5.63-95.0"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -23,7 +23,7 @@ process INTERPROSCAN_PFAM {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  /opt/interproscan/interproscan.sh \\
+  interproscan.sh \\
      -f TSV,GFF3 \\
      -appl Pfam \\
      -cpu $task.cpus \\
@@ -37,7 +37,7 @@ process INTERPROSCAN {
   tag "$meta"
   label 'process_high'
 
-  container "interpro/interproscan:5.63-95.0"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -53,7 +53,7 @@ process INTERPROSCAN {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  /opt/interproscan/interproscan.sh \\
+  interproscan.sh \\
      -f TSV,GFF3 \\
      -cpu $task.cpus \\
      -i ${candidate_nb_lrrs} \\
@@ -65,7 +65,7 @@ process INTERPROSCAN_SUPERFAMILY {
   tag "$meta"
   label 'process_high'
 
-  container "interpro/interproscan:5.63-95.0"
+  spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
@@ -80,7 +80,7 @@ process INTERPROSCAN_SUPERFAMILY {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-  /opt/interproscan/interproscan.sh \\
+  interproscan.sh \\
     -f TSV \\
     -cpu $task.cpus \\
     -app SUPERFAMILY \\
