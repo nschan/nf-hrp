@@ -50,6 +50,8 @@ Subsetting of fasta files based on lists of gene IDs (input for step 4 and step 
 
 Step 8.4 (sequence lengths) is done using seqkit.
 
+I have added SSF52540 as an nucleotide binding domain into conf1.tsv (numeric code 7 for IPS2fpG). It appears that SUPERFAMILY does assign many of the NB domains into this category and not into PF00931.
+
 ## Interproscan
 
 I was unable to run `interproscan` version 5.59_91.0 (the latest version on biocontainers) with `-dp` successfully: some of the interproscan pfam jobs with `-dp` errored out, and this produced a very short pfam table. 
