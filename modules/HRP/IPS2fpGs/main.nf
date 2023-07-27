@@ -27,7 +27,7 @@ process IPS2FPG {
       def conf1 = file("$projectDir/assets/conf1.tsv", checkIfExists: true)
       def conf2 = file("$projectDir/assets/conf2.tsv", checkIfExists: true)
   """
-  IPS2fpGs.sh -o ${meta}_ips2fp_out.tsv -c ${conf1} -d ${conf2} ${proteins_fasta}
+  IPS2fpGs.sh -f -o ${meta}_ips2fp_out.tsv -c ${conf1} -d ${conf2} ${proteins_fasta}
   cat ${meta}_ips2fp_out.tsv | grep full- > ${meta}_ips2fp_out_full_length.tsv
   """
 }
