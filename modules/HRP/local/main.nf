@@ -23,6 +23,7 @@ process GET_R_GENE_GFF {
   grep -Fw -f ${r_gene_list} ${gff} > ${meta}_R_gene_annotations.gff
   cat ${meta}_R_gene_annotations.gff \\
   | sort -k1,1 -k4,4n \\
-  | bedtools merge -s -c 2,3,7,8,9 -o distinct,distinct,distinct,distinct,collapse > ${meta}_R_genes_merged.gff
+  | bedtools merge -s -c 2,3,6,7,8,9, -o distinct,distinct,mean,distinct,distinct,collapse \\
+  | awk 'BEGIN {FS="\\t"; OFS="\\t"} { print \$1,\$4,\$5,\$2,\$3,\$6,\$7,\$8,\$9}' > ${meta}_R_genes_merged.gff
   """
 }

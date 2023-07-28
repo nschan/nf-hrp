@@ -28,7 +28,7 @@ process AGAT_FILTER_BY_LENGTH {
   """
   agat_sp_filter_gene_by_length.pl \\
   --gff ${gff_file} \\
-  --size 20000 --test "<" \\
+  --size 12000 --test "<" \\
   -o ${meta}_genblastG-output_filtered.gff
 
   grep transcript ${meta}_genblastG-output_filtered.gff > ${meta}_genblastG-output_filtered_transcripts.gff
