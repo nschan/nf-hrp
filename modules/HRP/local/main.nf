@@ -19,6 +19,12 @@ process GET_R_GENE_GFF {
       tuple val(meta), path("*_R_genes_merged.gff"),    emit: r_genes_merged_gff
   script:
       def prefix = task.ext.prefix ?: "${meta}"
+  /*
+  The second part of this script does:
+   - Sort gff file for bedtools
+   - Merge with bedtools (stranded) and preserve columns, take mean of blast score and collapse annotation column
+   - Reorder bed to gff via awk and write to _merged file
+  */
   """
   grep -Fw -f ${r_gene_list} ${gff} > ${meta}_R_gene_annotations.gff
   cat ${meta}_R_gene_annotations.gff \\
