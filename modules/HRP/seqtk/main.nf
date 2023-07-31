@@ -21,8 +21,11 @@ process SEQTK_SUBSET_RPS {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-    cat ${ids1} | cut -f 1 > ${ids1}_gene_ids.txt 
+    cat ${ids1} \\
+    | cut -f 1 > ${ids1}_gene_ids.txt
+
     cat ${ids1}_gene_ids.txt ${ids2} > all_ids.txt
+    
     seqtk subseq ${fasta} all_ids.txt > ${meta}_subset.fasta
   """
 }
@@ -45,7 +48,9 @@ process SEQTK_SUBSET_FL {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-    cat ${fl_tab} | cut -f 1 > ${fl_tab}_gene_ids.txt 
+    cat ${fl_tab} \\
+    | cut -f 1 > ${fl_tab}_gene_ids.txt 
+
     seqtk subseq ${fasta} ${fl_tab}_gene_ids.txt  > ${meta}_full_length.fasta
   """
 }
@@ -67,8 +72,11 @@ process SEQTK_SUBSET_CANDIDATES {
   script:
       def prefix = task.ext.prefix ?: "${meta}"
   """
-    cat ${ids1} | cut -f1 -d '-' > ${ids1}_gene_ids.txt
+    cat ${ids1} \\
+    | cut -f1 -d '-' > ${ids1}_gene_ids.txt
+
     cat ${ids1}_gene_ids.txt ${ids2} > all_ids.txt
+
     seqtk subseq ${fasta} all_ids.txt > ${meta}_NBLRR_candidates.fasta
   """
 }
