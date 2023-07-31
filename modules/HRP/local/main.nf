@@ -40,11 +40,12 @@ process FILTER_R_GENES {
 
   publishDir "${params.out}",
     mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:"gff_subset", publish_id:meta) }
+    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:"R_gene_subset", publish_id:meta) }
 
   input:
       tuple val(meta), path(pfam_out), path(superfamily_out)
-  
+      def conf1 = file("$projectDir/assets/conf1.tsv", checkIfExists: true)
+      def conf2 = file("$projectDir/assets/conf2.tsv", checkIfExists: true)  
   output:
       tuple val(meta), path("*NLR_table.tsv"), emit: out_tsv
       tuple val(meta), path("*NLR_genes.tsv"), emit: full_length_tsv
@@ -52,6 +53,6 @@ process FILTER_R_GENES {
       def prefix = task.ext.prefix ?: "${meta}"
 
   """
-  Rscript filter_R_genes.R ${pfam_out} ${superfamily_out} ${meta}
+  filter_R_genes.R ${pfam_out} ${superfamily_out} ${meta} ${conf1} ${conf2}
   """
 }
