@@ -33,3 +33,25 @@ process GET_R_GENE_GFF {
   | awk 'BEGIN {FS="\\t"; OFS="\\t"} { print \$1,\$4,\$5,\$2,\$3,\$6,\$7,\$8,\$9}' > ${meta}_R_genes_merged.gff
   """
 }
+
+process FILTER_R_GENES {
+  tag "$meta"
+  label 'process_low'
+
+  publishDir "${params.out}",
+    mode: params.publish_dir_mode,
+    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:"gff_subset", publish_id:meta) }
+
+  input:
+      tuple val(meta), path(pfam_out), path(superfamily_out)
+  
+  output:
+      tuple val(meta), path("*NLR_table.tsv"), emit: out_tsv
+      tuple val(meta), path("*NLR_genes.tsv"), emit: full_length_tsv
+  script:
+      def prefix = task.ext.prefix ?: "${meta}"
+
+  """
+  Rscript filter_R_genes.R ${pfam_out} ${superfamily_out} ${meta}
+  """
+}

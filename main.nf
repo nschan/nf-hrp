@@ -20,6 +20,7 @@ include { INTERPROSCAN } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_PFAM } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_SUPERFAMILY } from './modules/HRP/interproscan/main'
 include { IPS2FPG } from './modules/HRP/IPS2fpGs/main'
+include { FILTER_R_GENES } from './modules/HRP/local/main'
 include { SEQTK_SUBSET_RPS } from './modules/HRP/seqtk/main'
 include { SEQTK_SUBSET_FL } from './modules/HRP/seqtk/main'
 include { SEQTK_SUBSET_CANDIDATES } from './modules/HRP/seqtk/main'
@@ -78,10 +79,11 @@ workflow HRP {
 
       INTERPROSCAN_SUPERFAMILY(SEQTK_SUBSET_RPS.out)
       // Step 6
-      IPS2FPG(INTERPROSCAN_PFAM.out.protein_tsv.join(INTERPROSCAN_SUPERFAMILY.out))
+      //IPS2FPG(INTERPROSCAN_PFAM.out.protein_tsv.join(INTERPROSCAN_SUPERFAMILY.out))
+      FILTER_R_GENES(INTERPROSCAN_PFAM.out.protein_tsv.join(INTERPROSCAN_SUPERFAMILY.out))
       // Step 7
       SEQTK_SUBSET_FL(proteins
-                      .join(IPS2FPG.out.full_length_tsv))
+                      .join(FILTER_R_GENES.out.full_length_tsv))
       // Genblast
       genblast_in = genome.join(SEQTK_SUBSET_FL.out)
       GENBLAST_G(genblast_in)
@@ -99,7 +101,7 @@ workflow HRP {
       //   Subset to non-redundant candidates
       candidate_lists = proteins
                         .join(BEDTOOLS_NR_CLUSTERS.out)
-                        .join(IPS2FPG.out.full_length_tsv)
+                        .join(FILTER_R_GENES.out.full_length_tsv)
       SEQTK_SUBSET_CANDIDATES(candidate_lists)
       //   Interproscan of Candidates
       INTERPROSCAN(SEQTK_SUBSET_CANDIDATES.out)

@@ -97,7 +97,6 @@ rbind(
             has_NB = case_when(sum(has_NB) > 0 ~TRUE, TRUE ~ FALSE),
             has_LRR = case_when(sum(has_LRR) > 0 ~TRUE, TRUE ~ FALSE),
             has_COIL = case_when(sum(has_COIL) > 0 ~TRUE, TRUE ~ FALSE)) %>% 
-  #filter((has_TIR | has_COIL | has_RPW8) & has_NB & has_LRR)
   filter(has_NB & has_LRR) %>% 
   mutate(Type = case_when(
     has_TIR ~ "TNL",
