@@ -16,7 +16,7 @@ process IPS2FPG {
     saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
 
   input:
-      tuple val(meta), path(proteins_fasta)
+      tuple val(meta), path(pfam_out), path(superfamily_out)
   
   output:
       tuple val(meta), path("*out.tsv"), emit: out_tsv
@@ -27,7 +27,8 @@ process IPS2FPG {
       def conf1 = file("$projectDir/assets/conf1.tsv", checkIfExists: true)
       def conf2 = file("$projectDir/assets/conf2.tsv", checkIfExists: true)
   """
-  IPS2fpGs.sh -f -o ${meta}_ips2fp_out.tsv -c ${conf1} -d ${conf2} ${proteins_fasta}
+  cat ${pfam_out} ${superfamily_out} > ${meta}_protein_annotations.tsv
+  IPS2fpGs.sh -f -o ${meta}_ips2fp_out.tsv -c ${conf1} -d ${conf2} ${meta}_protein_annotations.tsv
   cat ${meta}_ips2fp_out.tsv | grep full- > ${meta}_ips2fp_out_full_length.tsv
   """
 }

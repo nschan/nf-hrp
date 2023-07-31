@@ -52,7 +52,7 @@ workflow HRP {
       // Step 2 Interproscan
       // This step works with spack module interproscan/5.63-95.0
       // I could not locate a container with this version.
-      // Internal container build pipeline failed, the container exceeds storage on the rather small runner VMs.
+      // Internal container build pipeline failed, the container exceeds storage on our gitlab container storage.
       //
       // It does not seem to give proper results with biocontainers/interproscan:5.59_91.0--hec16e2b_1
       // This seems to be version related.
@@ -78,7 +78,7 @@ workflow HRP {
 
       INTERPROSCAN_SUPERFAMILY(SEQTK_SUBSET_RPS.out)
       // Step 6
-      IPS2FPG(INTERPROSCAN_SUPERFAMILY.out)
+      IPS2FPG(INTERPROSCAN_PFAM.out.protein_tsv.join(INTERPROSCAN_SUPERFAMILY.out))
       // Step 7
       SEQTK_SUBSET_FL(proteins
                       .join(IPS2FPG.out.full_length_tsv))
