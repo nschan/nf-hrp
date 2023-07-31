@@ -92,7 +92,6 @@ rbind(
     )
   ) %>% 
   # Check TIR, COIL, RPW, NB and LRR presence
-  group_by(ID) %>% 
   mutate(has_TIR = case_when(Family %in% TIR$Family ~ TRUE,
                              TRUE ~ FALSE),
          has_TIR_evidence = case_when(Family %in% TIR$Family ~ Family,
@@ -114,6 +113,7 @@ rbind(
          has_LRR_evidence = case_when(Family %in% LRR$Family ~ Family,
                               TRUE ~ NA_character_)) %>% 
   # Make uniques
+  group_by(ID) %>% 
   summarize(has_TIR = case_when(sum(has_TIR)  > 0 ~ TRUE, TRUE ~ FALSE),
             has_COIL = case_when(sum(has_COIL) > 0 ~ TRUE, TRUE ~ FALSE),
             has_RPW8 = case_when(sum(has_RPW8) > 0 ~ TRUE, TRUE ~ FALSE),

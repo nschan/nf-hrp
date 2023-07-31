@@ -19,7 +19,10 @@ include { BEDTOOLS_NR_CLUSTERS } from './modules/HRP/bedtools/main'
 include { INTERPROSCAN } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_PFAM } from './modules/HRP/interproscan/main'
 include { INTERPROSCAN_SUPERFAMILY } from './modules/HRP/interproscan/main'
-include { IPS2FPG } from './modules/HRP/IPS2fpGs/main'
+/*
+  IPS2FPG no longer included and replaced by R script in FILTER_R_GENES
+  include { IPS2FPG } from './modules/HRP/IPS2fpGs/main'
+*/
 include { FILTER_R_GENES } from './modules/HRP/local/main'
 include { SEQTK_SUBSET_RPS } from './modules/HRP/seqtk/main'
 include { SEQTK_SUBSET_FL } from './modules/HRP/seqtk/main'

@@ -44,6 +44,9 @@ I do not consider this a problem for the pipeline here, but I would not recommen
 
 This file is bundled in bin/, the respective conf files are in assets/, original here https://github.com/AndolfoG/HRP
 
+IPS2fpgGs.sh has been replaced with an R script that does the same, but is slower.
+It is easier for me to maintain R than bash, the overall approach is similar, keeping proteins based on the presence of NB and LRR domains, and adding in extra info based on Coil, RPW8 or TIR domains. The output from this script is a bit more informative, it retains which domains were found in the protein in `_NLR_table.tsv`, `_NLR_genes.tsv` contains only gene-id and classification.
+
 ## Changes compared to the original pipeline
 
 Subsetting of fasta files based on lists of gene IDs (input for step 4 and step 9) is done using seqtk.
