@@ -71,3 +71,30 @@ process AGAT_EXTRACT_PROTEINS {
   """
 }
 
+process AGAT_EXTRACT_NLR {
+  tag "$meta"
+  label 'process_low'
+
+  publishDir "${params.out}",
+    mode: params.publish_dir_mode,
+    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
+
+  input:
+      tuple val(meta), path(genome_fasta), path(nlr_gff)
+  
+  output:
+      tuple val(meta), path("*NLR_proteins.fasta"), emit: extracted_nlrs
+  
+  script:
+      def prefix = task.ext.prefix ?: "${meta}"
+  """
+  cat ${genome_fasta} | fold > ${genome_fasta.baseName}.fold.fasta
+  agat_sp_extract_sequences.pl \\
+       -g ${nlr_gff} \\
+       -f ${genome_fasta.baseName}.fold.fasta \\
+       -p \\
+       --cfs \\
+       --cis \\
+       -o ${prefix}_NLR_proteins.fa
+   """
+}
