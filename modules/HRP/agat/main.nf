@@ -93,8 +93,9 @@ process AGAT_EXTRACT_NLR {
        -g ${nlr_gff} \\
        -f ${genome_fasta.baseName}.fold.fasta \\
        -p \\
+       -t transcript \\
        --cfs \\
        --cis \\
-       -o ${prefix}_NLR_proteins.fa
+       -o ${prefix}_NLR_proteins.fasta
    """
 }
