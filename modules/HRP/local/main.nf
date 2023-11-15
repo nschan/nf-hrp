@@ -8,9 +8,11 @@ process GET_R_GENE_GFF {
   label 'process_low'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:"gff_subset", publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(gff), path(r_gene_list)
   
@@ -39,9 +41,11 @@ process FILTER_R_GENES {
   label 'process_low'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:"R_gene_subset", publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(pfam_out), path(superfamily_out)
       def conf1 = file("$projectDir/assets/conf1.tsv", checkIfExists: true)

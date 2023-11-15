@@ -7,10 +7,12 @@ process BEDTOOLS_GETFASTA {
   tag "$meta"
   label 'process_low'
   
-  publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+   publishDir "${params.out}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(protein_fasta), path(bed_file)
   
@@ -32,9 +34,11 @@ process BEDTOOLS_CLUSTER {
   label 'process_low'
   
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(bed_file)
   

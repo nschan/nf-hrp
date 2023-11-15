@@ -8,9 +8,11 @@ process GENBLAST_G {
   label 'process_medium'
   container "gitlab.lrz.de:5005/beckerlab/container-playground/genblastg:2a25a73b"
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(genome_fasta), path(nb_lrr_fasta)
   

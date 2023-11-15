@@ -13,9 +13,11 @@ process AGAT_FILTER_BY_LENGTH {
           'quay.io/biocontainers/agat:1.1.0--pl5321hdfd78af_1' }"
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(gff_file)
   

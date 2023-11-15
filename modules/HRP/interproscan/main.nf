@@ -10,9 +10,11 @@ process INTERPROSCAN_PFAM {
   spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(protein_fasta)
   
@@ -40,9 +42,11 @@ process INTERPROSCAN {
   spack 'interproscan@5.63-95.0'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(candidate_nb_lrrs)
   

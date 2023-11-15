@@ -12,10 +12,12 @@ process SEQKIT_GET_LENGTH {
           'https://depot.galaxyproject.org/singularity/seqkit:2.4.0--h9ee0642_0' :
           'quay.io/biocontainers/seqkit:2.4.0--h9ee0642_0' }"
 
-  publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+    publishDir "${params.out}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(fasta_file)
   
