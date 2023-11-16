@@ -11,7 +11,7 @@ process GET_R_GENE_GFF {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(gff), path(r_gene_list)
@@ -44,7 +44,7 @@ process FILTER_R_GENES {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(pfam_out), path(superfamily_out)

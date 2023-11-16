@@ -11,7 +11,7 @@ process SEQTK_SUBSET_RPS {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(fasta), path(ids1), path(ids2)
@@ -40,7 +40,7 @@ process SEQTK_SUBSET_FL {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(fasta), path(fl_tab)
@@ -67,7 +67,7 @@ process SEQTK_SUBSET_CANDIDATES {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(fasta), path(ids1), path(ids2)

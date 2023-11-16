@@ -16,7 +16,7 @@ process AGAT_FILTER_BY_LENGTH {
         mode: params.publish_dir_mode,
         saveAs: { filename -> saveFiles(filename:filename,
                                         options:params.options, 
-                                        publish_dir:"${task.process}".replace(':','/'), 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
                                         publish_id:meta) }
   input:
       tuple val(meta), path(gff_file)
@@ -46,9 +46,11 @@ process AGAT_EXTRACT_PROTEINS {
   label 'process_low'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(genome_fasta), path(genome_gff)
       val(exclusion_pattern)
@@ -78,9 +80,11 @@ process AGAT_EXTRACT_NLR {
   label 'process_low'
 
   publishDir "${params.out}",
-    mode: params.publish_dir_mode,
-    saveAs: { filename -> saveFiles(filename:filename, options:params.options, publish_dir:getSoftwareName(task.process), publish_id:meta) }
-
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
+                                        publish_id:meta) }
   input:
       tuple val(meta), path(genome_fasta), path(nlr_gff)
   
