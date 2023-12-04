@@ -7,7 +7,7 @@ process INTERPROSCAN_PFAM {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.63-95.0'
+  spack 'interproscan@5.65-97.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,
@@ -39,7 +39,7 @@ process INTERPROSCAN {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.63-95.0'
+  spack 'interproscan@5.65-97.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,
@@ -69,7 +69,7 @@ process INTERPROSCAN_SUPERFAMILY {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.63-95.0'
+  spack 'interproscan@5.65-97.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,
