@@ -105,3 +105,29 @@ process AGAT_EXTRACT_NLR {
        -o ${prefix}_NLR_proteins.fasta
    """
 }
+
+process AGAT_COMPLEMENT {
+  tag "$meta"
+  label 'process_low'
+
+  publishDir "${params.out}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
+                                        publish_id:meta) }
+  input:
+      tuple val(meta), path(ref_gff), path(nlr_gff)
+  
+  output:
+      tuple val(meta), path("*NLR_proteins.fasta"), emit: extracted_nlrs
+  
+  script:
+      def prefix = task.ext.prefix ?: "${meta}"
+  """
+  agat_sp_complement_annotations.pl \\
+    --ref ${ref_gff} \\
+    --add ${nlr_gff} \\
+    --out ${meta}_liftoff_nlr_merge.gff  
+  """
+}

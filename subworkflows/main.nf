@@ -7,6 +7,7 @@ Include modules
 include { AGAT_FILTER_BY_LENGTH } from '../modules/HRP/agat/main'
 include { AGAT_EXTRACT_PROTEINS } from '../modules/HRP/agat/main'
 include { AGAT_EXTRACT_NLR } from '../modules/HRP/agat/main'
+include { AGAT_COMPLEMENT } from '../modules/HRP/agat/main'
 include { MEME } from '../modules/HRP/memesuite/main'
 include { MAST } from '../modules/HRP/memesuite/main'
 include { BEDTOOLS_GETFASTA } from '../modules/HRP/bedtools/main'
@@ -45,6 +46,7 @@ workflow HRP {
          This is somewhat concerning, but.. well.
       */ 
       genome = hrp_in.map(row -> [row.sample, row.fasta])
+      ref_gff = hrp_in.map(row -> [row.sample, row.gff])
 
       AGAT_EXTRACT_PROTEINS(hrp_in, params.exclude_pattern)
       proteins = AGAT_EXTRACT_PROTEINS.out
@@ -99,6 +101,8 @@ workflow HRP {
       GET_R_GENE_GFF(AGAT_FILTER_BY_LENGTH.out.filtered_gff.join(BEDTOOLS_NR_CLUSTERS.out))
       //   Extract protein sequences
       AGAT_EXTRACT_NLR(genome.join(GET_R_GENE_GFF.out.r_genes_merged_gff))
+      //   Merge R-Gene gff and input gff
+      AGAT_COMPLEMENT(ref_gff.join(GET_R_GENE_GFF.out.r_genes_merged_gff))
       //   Interproscan of NLR-Candidates
       INTERPROSCAN(AGAT_EXTRACT_NLR.out)
 }
