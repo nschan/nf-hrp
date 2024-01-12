@@ -121,6 +121,7 @@ process AGAT_COMPLEMENT {
   
   output:
       tuple val(meta), path("*_liftoff_nlr_merge.gff"), emit: merged_gff
+      tuple val(meta), path("*_liftoff_nlr_merge.gtf"), emit: merged_gtf
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
@@ -129,5 +130,8 @@ process AGAT_COMPLEMENT {
     --ref ${ref_gff} \\
     --add ${nlr_gff} \\
     --out ${meta}_liftoff_nlr_merge.gff  
+    agat_convert_sp_gff2gtf.pl \\
+    --gff ${meta}_liftoff_nlr_merge.gff   \\
+    -o ${meta}_liftoff_nlr_merge.gtf 
   """
 }
