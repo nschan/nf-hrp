@@ -57,6 +57,6 @@ process FILTER_R_GENES {
       def prefix = task.ext.prefix ?: "${meta}"
 
   """
-  filter_R_genes.R ${pfam_out} ${superfamily_out} ${meta} ${conf1} ${conf2}
+  filter_R_genes.R ${pfam_out} ${superfamily_out} ${meta}
   """
 }

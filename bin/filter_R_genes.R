@@ -12,12 +12,6 @@ args <- commandArgs(trailingOnly = TRUE)
 # file1 (e.g. Pfam)
 # file2 (e.g. Superfamily)
 # outfile (Basename only)
-# conf1
-# conf2
-
-## Alternative: read from conf1 and conf2 IPS2fpGs
-# domains <- read_tsv(args[5], col_names = F) %>% set_colnames(c("Number", "Full", "Class", "Gene")) %>% 
-#  left_join(read_tsv(args[4], col_names = F) %>% set_colnames(c("Family", "Number")), by = "Family")
 
 # Define domain - pfam or superfam relationships
 ## Currently, these use what is defined by HRP
@@ -74,7 +68,7 @@ rbind(
   read_tsv(args[1], col_names = F, show_col_types = FALSE),
   read_tsv(args[2], col_names = F, show_col_types = FALSE)
 ) %>%
-  set_colnames(
+  magrittr::set_colnames(
     c(
       "ID",
       "hash",
@@ -88,7 +82,9 @@ rbind(
       "Status",
       "Date",
       "InterPro_Accession",
-      "InterPro_description"
+      "InterPro_description",
+      "extra1",
+      "extra2"
     )
   ) %>% 
   # Check TIR, COIL, RPW, NB and LRR presence
