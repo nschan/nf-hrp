@@ -6,13 +6,9 @@ RUN git clone https://github.com/thecgs/genblastG_extension.git
 
 RUN mv genblastG_extension /opt/
 
-RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.14.0+-x64-linux.tar.gz
+RUN wget https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.14.0+-x64-linux.tar.gz && tar -xf ncbi-blast-2.14.0+-x64-linux.tar.gz && rm https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/ncbi-blast-2.14.0+-x64-linux.tar.gz
 
-RUN tar -xf ncbi-blast-2.14.0+-x64-linux.tar.gz
-
-RUN mkdir /opt/bin/
-
-RUN mkdir /opt/bin/ncbi-blast/
+RUN mkdir -p /opt/bin/ncbi-blast/
 
 RUN mv ncbi-blast-2.14.0+/bin/* /opt/bin/ncbi-blast/
 
