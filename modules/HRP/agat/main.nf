@@ -120,7 +120,7 @@ process AGAT_COMPLEMENT {
       tuple val(meta), path(ref_gff), path(nlr_gff)
   
   output:
-      tuple val(meta), path("*NLR_proteins.fasta"), emit: extracted_nlrs
+      tuple val(meta), path("*_liftoff_nlr_merge.gff"), emit: merged_gff
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
