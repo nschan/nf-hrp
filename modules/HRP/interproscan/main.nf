@@ -30,7 +30,8 @@ process INTERPROSCAN_PFAM {
      -appl Pfam \\
      -cpu $task.cpus \\
      -i ${protein_fasta} \\
-     -b ${prefix}_proteins
+     -b ${prefix}_proteins \\
+     -T "${PWD}/tmp"
   grep NB-ARC ${prefix}_proteins.tsv | cut -f1,7,8 > ${prefix}_NB.bed
   """
 }
@@ -61,7 +62,8 @@ process INTERPROSCAN {
      -f TSV,GFF3 \\
      -cpu $task.cpus \\
      -i ${candidate_nb_lrrs} \\
-     -b ${prefix}_NBLRR_gene_candidates     
+     -b ${prefix}_NBLRR_gene_candidates   \\
+    -T "${PWD}/tmp"
   """
 }
 
@@ -91,6 +93,7 @@ process INTERPROSCAN_SUPERFAMILY {
     -cpu $task.cpus \\
     -app SUPERFAMILY \\
     -i ${protein_fasta} \\
-    -b ${prefix}_superfam
+    -b ${prefix}_superfam \\
+    -T "${PWD}/tmp"
   """
 }
