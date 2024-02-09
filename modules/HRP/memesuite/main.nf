@@ -59,6 +59,6 @@ process MAST {
   """
   mast -o ${meta}_mast ${meme_out} ${protein_fasta}
   cp ${meta}_mast/mast.txt ${meta}_mast_out.txt
-  cat ${meta}_mast_out.txt | grep -oE "AT[1-5C]G[0-9]+.[0-9]+" > ${meta}_mast_geneIDs.txt
+  cat ${meta}_mast_out.txt | grep -oE "AT[1-5C]G[0-9]+.[0-9]+|evm[0-9a-z\\.]*" > ${meta}_mast_geneIDs.txt
   """
 }

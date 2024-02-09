@@ -7,7 +7,7 @@ process INTERPROSCAN_PFAM {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.65-97.0'
+  spack 'interproscan@5.66-98.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,
@@ -40,7 +40,7 @@ process INTERPROSCAN {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.65-97.0'
+  spack 'interproscan@5.66-98.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,
@@ -66,12 +66,43 @@ process INTERPROSCAN {
     -T "${PWD}/tmp"
   """
 }
+process INTERPROSCAN_EXTENDED {
+  tag "$meta"
+  label 'process_high'
 
+  spack 'interproscan@5.66-98.0'
+
+  publishDir "${params.out}",
+        mode: params.publish_dir_mode,
+        saveAs: { filename -> saveFiles(filename:filename,
+                                        options:params.options, 
+                                        publish_dir:"${task.process}".replace(':','/').toLowerCase(), 
+                                        publish_id:meta) }
+  input:
+      tuple val(meta), path(candidate_nb_lrrs)
+  
+  output:
+      tuple val(meta), path("*.tsv"), emit: protein_tsv
+      tuple val(meta), path("*.bed"), emit: nb_bed
+  
+  script:
+      def prefix = task.ext.prefix ?: "${meta}"
+  """
+  interproscan.sh \\
+     -app TIGRFAM,SFLD,SUPERFAMILY,PANTHER,Gene3D,Hamap,ProSiteProfiles,SMART,CDD,PRINTS,PIRSR,Pfam \\
+     -f TSV,GFF3 \\
+     -cpu $task.cpus \\
+     -i ${candidate_nb_lrrs} \\
+     -b ${prefix}_proteins   \\
+    -T "${PWD}/tmp"
+    grep NB-ARC ${prefix}_proteins.tsv | cut -f1,7,8 > ${prefix}_NB.bed
+  """
+}
 process INTERPROSCAN_SUPERFAMILY {
   tag "$meta"
   label 'process_high'
 
-  spack 'interproscan@5.65-97.0'
+  spack 'interproscan@5.66-98.0'
 
   publishDir "${params.out}",
         mode: params.publish_dir_mode,

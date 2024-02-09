@@ -14,6 +14,7 @@ include { BEDTOOLS_GETFASTA } from '../modules/HRP/bedtools/main'
 include { BEDTOOLS_CLUSTER } from '../modules/HRP/bedtools/main'
 include { BEDTOOLS_NR_CLUSTERS } from '../modules/HRP/bedtools/main'
 include { INTERPROSCAN } from '../modules/HRP/interproscan/main'
+include { INTERPROSCAN_EXTENDED } from '../modules/HRP/interproscan/main'
 include { INTERPROSCAN_PFAM } from '../modules/HRP/interproscan/main'
 include { INTERPROSCAN_SUPERFAMILY } from '../modules/HRP/interproscan/main'
 /*
@@ -62,6 +63,7 @@ workflow HRP {
       // As of July 2023 this is 5.63-95-0
       // I guess there are work-arounds for this, it should work with an updated container.
       INTERPROSCAN_PFAM(proteins)
+      //INTERPROSCAN_EXTENDED(proteins)
       // Step 3.1 Bedfile
       bedtools_gf_in = proteins.join(INTERPROSCAN_PFAM.out.nb_bed)
       // Step 3.2 Extract
@@ -104,5 +106,5 @@ workflow HRP {
       //   Merge R-Gene gff and input gff
       AGAT_COMPLEMENT(ref_gff.join(GET_R_GENE_GFF.out.r_genes_merged_gff))
       //   Interproscan of NLR-Candidates
-      INTERPROSCAN(AGAT_EXTRACT_NLR.out)
+      // INTERPROSCAN(AGAT_EXTRACT_NLR.out)
 }
