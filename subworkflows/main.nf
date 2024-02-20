@@ -50,7 +50,9 @@ workflow HRP {
       ref_gff = hrp_in.map(row -> [row.sample, row.gff])
 
       AGAT_EXTRACT_PROTEINS(hrp_in, params.exclude_pattern)
-      proteins = AGAT_EXTRACT_PROTEINS.out
+      AGAT_EXTRACT_PROTEINS
+        .out
+        .set { proteins }
       // Step 2 Interproscan
       // This step works with spack module interproscan/5.63-95.0
       // I could not locate a container with this version.
@@ -63,9 +65,10 @@ workflow HRP {
       // As of July 2023 this is 5.63-95-0
       // I guess there are work-arounds for this, it should work with an updated container.
       INTERPROSCAN_PFAM(proteins)
-      //INTERPROSCAN_EXTENDED(proteins)
       // Step 3.1 Bedfile
-      bedtools_gf_in = proteins.join(INTERPROSCAN_PFAM.out.nb_bed)
+      proteins
+        .join(INTERPROSCAN_PFAM.out.nb_bed)
+        .set { bedtools_gf_in }
       // Step 3.2 Extract
       BEDTOOLS_GETFASTA(bedtools_gf_in)
       // Step 3.3 MEME
@@ -73,11 +76,11 @@ workflow HRP {
       // Step 4 MAST
       MAST(proteins.join(MEME.out))
       // Step 5
+      proteins
+        .join(INTERPROSCAN_PFAM.out.protein_tsv
+        .join(MAST.out.mast_geneids))
+        .set { to_subset }
 
-      to_subset = proteins
-                    .join(INTERPROSCAN_PFAM.out.protein_tsv
-                    .join(MAST.out.mast_geneids))
-                    
       SEQTK_SUBSET_RPS(to_subset)
 
       INTERPROSCAN_SUPERFAMILY(SEQTK_SUBSET_RPS.out)
@@ -88,7 +91,10 @@ workflow HRP {
       SEQTK_SUBSET_FL(proteins
                       .join(FILTER_R_GENES.out.full_length_tsv))
       // Genblast
-      genblast_in = genome.join(SEQTK_SUBSET_FL.out)
+      genome
+        .join(SEQTK_SUBSET_FL.out)
+        .set { genblast_in }
+        
       GENBLAST_G(genblast_in)
       SEQKIT_GET_LENGTH(GENBLAST_G.out.genblast_pro)
       // Step 8.1

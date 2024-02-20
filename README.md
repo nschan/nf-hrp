@@ -26,6 +26,10 @@ sample1,genome1.fasta,genome1.gff
 
 The relevant gff files are `results/agat/sampleName_filtered_trascripts.[gff|bed]`, the output of the protein annotations from interproscan are in `results/interproscan/sampleName_NBLRR_gene_candidates.[gff3|tsv]`
 
+# Graph
+
+![Tubemap](nf-HRP.tubes.png)
+
 # Notes
 
 I ran into some issues during implementation, I am documenting these here.
