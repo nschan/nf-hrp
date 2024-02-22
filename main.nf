@@ -1,5 +1,5 @@
 /*
-Here I attempt to replicate the HRP workflow
+Original description:
 https://github.com/AndolfoG/HRP/
 All modules are in modules/HRP
 */
@@ -12,7 +12,8 @@ params.exclude_pattern = "ATMG"
 include { HRP } from './subworkflows/main'
 
 workflow {
-  ch_input = Channel.fromPath(params.samplesheet) 
-                      .splitCsv(header:true) 
+  Channel.fromPath(params.samplesheet) 
+    .splitCsv(header:true)
+    .set { ch_input }
   HRP(ch_input)
 }
