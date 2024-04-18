@@ -39,7 +39,7 @@ graph TD;
   nbarc --> meme[MEME]
   meme --> mast[MAST]
   mast --> superfam[Interproscan Superfamily]
-  pfam --> rgdomains[R-Gene Identification based on Domains]
+  pfam --> rgdomains[R-Gene identification based on domains]
   superfam --> rgdomains
   rgdomains --> miniprot[Discovery based on known R-Genes miniprot]
   miniprot --> seqs[R-Gene sequences]
