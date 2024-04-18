@@ -41,7 +41,7 @@ graph TD;
   mast --> superfam[Interproscan Superfamily]
   pfam --> rgdomains[R-Gene Identification based on Domains]
   superfam --> rgdomains
-  rgenomains --> miniprot[Discovery based on known R-Genes (miniprot)]
+  rgdomains --> miniprot[Discovery based on known R-Genes miniprot]
   miniprot --> seqs[R-Gene sequences]
   miniprot --> rgff[R-Gene gff]
   ingff --> mergegff[Merged GFF]
