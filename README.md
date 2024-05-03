@@ -5,7 +5,7 @@ This pipeline implements the '*H*omology based *R* gene *P*rediction' workflow (
 # Usage
 
 The pipeline takes a gff3 file with annotations and a fasta file of the genome as input in a samplesheet and works through the steps of HRP.
-The pipeline requires nextflow >= 23.04.2 to work with spack modules. It has been extensively run on biohpc_gen in the [LRZ](https://www.lrz.de/) CoolMuc2 SLURM cluster.
+The pipeline has been extensively run on biohpc_gen in the [LRZ](https://www.lrz.de/) CoolMuc2 SLURM cluster.
 
 Running this on other infrastructure probably needs some changes to modules.
 
@@ -41,7 +41,7 @@ graph TD;
   mast --> superfam[Interproscan Superfamily]
   pfam --> rgdomains[R-Gene identification based on domains]
   superfam --> rgdomains
-  rgdomains --> miniprot[Discovery based on known R-Genes miniprot]
+  rgdomains --> miniprot[miniprot: Discovery based on known R-Genes]
   miniprot --> seqs[R-Gene sequences]
   miniprot --> rgff[R-Gene gff]
   ingff --> mergegff[Merged GFF]
