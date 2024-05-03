@@ -41,9 +41,6 @@ workflow HRP {
 
     main:
       // Step 1 Extract proteins
-      /* This procedure produces a few broken proteins on TAIR11.
-         This is somewhat concerning, but.. well.
-      */ 
       hrp_in
         .map { row -> [row[0], row[1]] }
         .set { genome }
@@ -57,18 +54,7 @@ workflow HRP {
       AGAT_EXTRACT_PROTEINS
         .out
         .set { proteins }
-      // Step 2 Interproscan
-      // This step works with spack module interproscan/5.63-95.0
-      // I could not locate a container with this version.
-      // Internal container build pipeline failed, the container exceeds storage on our gitlab container storage.
-      //
-      // It does not seem to give proper results with biocontainers/interproscan:5.59_91.0--hec16e2b_1
-      // This seems to be version related.
-      // For me interproscan:5.59_91.0 with -dp did not run, subjobs failed and the result was incomplete.
-      // To use interproscan without -dp the version needs to be the current release.
-      // As of July 2023 this is 5.63-95-0
-      // I guess there are work-arounds for this, it should work with an updated container.
-      INTERPROSCAN_PFAM(proteins)
+       INTERPROSCAN_PFAM(proteins)
       //INTERPROSCAN_EXTENDED(proteins)
       // Step 3.1 Bedfile
       proteins
