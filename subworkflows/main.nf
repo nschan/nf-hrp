@@ -42,11 +42,11 @@ workflow HRP {
     main:
       // Step 1 Extract proteins
       hrp_in
-        .map { row -> [row[0], row[1]] }
+        .map { row -> [row.sample, row.fasta] }
         .set { genome }
 
       hrp_in
-        .map { row -> [row[0], row[2]] }
+        .map { row -> [row.sample, row.gff] }
         .set { ref_gff }
 
       AGAT_EXTRACT_PROTEINS(hrp_in, params.exclude_pattern)
@@ -66,7 +66,8 @@ workflow HRP {
       MEME(BEDTOOLS_GETFASTA.out)
       // Step 4 MAST
       MAST(proteins
-            .join(MEME.out))
+            .join(MEME.out),
+            params.mast_gene_pattern)
       // Step 5
 
       proteins
@@ -103,7 +104,9 @@ workflow HRP {
       genome
         .join(SEQTK_SUBSET_FL.out)
         .set { miniprot_in }
-  
+
+      miniprot_in.view()
+
       MINIPROT_HRP(miniprot_in) // emits gff
 
       AGAT_FILTER_BY_LENGTH(MINIPROT_HRP
