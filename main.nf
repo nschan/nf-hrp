@@ -7,6 +7,7 @@ All modules are in modules/HRP
 nextflow.enable.dsl = 2 
 params.out = './results'
 params.publish_dir_mode = 'copy'
+params.cds_feature = "CDS"
 params.exclude_pattern = "ATMG"
 /* 
 Define pattern for MAST, which is used to extract gene sequences

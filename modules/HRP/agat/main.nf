@@ -50,8 +50,9 @@ process AGAT_EXTRACT_PROTEINS {
   
   script:
       def prefix = task.ext.prefix ?: "${meta}"
+      def feature = params.cds_feature
   """
-  cat ${genome_gff} | grep CDS | grep -v ${exclusion_pattern} > ${genome_gff}_subset.gff3
+  cat ${genome_gff} | grep ${feature} | grep -v ${exclusion_pattern} > ${genome_gff}_subset.gff3
   cat ${genome_fasta} | fold > ${genome_fasta.baseName}.fold.fasta
   agat_sp_extract_sequences.pl \\
        -g ${genome_gff}_subset.gff3 \\
