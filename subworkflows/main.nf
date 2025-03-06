@@ -29,9 +29,10 @@ include { GET_R_GENE_GFF } from '../modules/HRP/local/main'
 
 log.info """\
   Parameters:
-     samplesheet     : ${params.samplesheet}
-     exlude_pattern  : ${params.exclude_pattern}
-     outdir          : ${params.out}
+     samplesheet       : ${params.samplesheet}
+     exlude_pattern    : ${params.exclude_pattern}
+     mast_gene_pattern : ${params.mast_gene_pattern}
+     outdir            : ${params.out}
 """
     .stripIndent(false)
 
